@@ -176,6 +176,19 @@
             border-radius: 3px;
         }
 
+        .mark-it-notice {
+            position: absolute;
+            display: inline-block;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, 0);
+            padding: 15px;
+            min-width: 100px;
+            text-align: center;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+
     </style>
     <script src="http://libs.baidu.com/jquery/1.8.0/jquery.min.js"></script>
     <script type="text/javascript" src="./js/rangy-core.js"></script>
@@ -404,6 +417,9 @@
                 // 弹框保存按钮点击事件
                 $('.mark-it-popup-icon-message-box-tool-save').click(function () {
                     // 保存标记
+
+                    var value = $('.mark-it-popup-icon-message-box-input > textarea').val();
+                    currentSelection.mark = value;
                     saveMarks(function (error, mark) {
                         if (error) {
                             showNotice('保存失败');
@@ -428,27 +444,70 @@
             $('.mark-it-popup-icon-message-box-input > textarea').val(currentSelection.mark);
 
             changeColor();
-            // TODO 判断弹出位置，不要超出浏览器窗口
             var top = document.body.scrollTop + y;
             var left = document.body.scrollLeft + x;
+            var tipHeight = 30;
+            var tipWidth = 124;
+            if (isBottomOut()) {
+                top -= tipHeight;
+            }
+
+            if (isRightOut()) {
+                left -= tipWidth;
+            }
             $tip.css({top: top + 'px', left: left + 'px'});
             $tip.fadeIn(150);
         }
 
+        function isBottomOut(tipHeight) {
+            tipHeight = tipHeight || 50;
+            var wHeight = $(window).height();
+            var sTop = $(document).scrollTop();
+            var top = document.body.scrollTop + y;
+
+            return top - sTop + tipHeight > wHeight;
+        }
+
+        function isRightOut(tipWidth) {
+            tipWidth = tipWidth || 124;
+            var wWidth = $(window).width();
+            var sLeft = $(document).scrollLeft();
+            var left = document.body.scrollLeft + x;
+            return left - sLeft + tipWidth > wWidth;
+        }
+
         function showMessageBox() {
-            // TODO 判断弹出位置，不要超出浏览器窗口
-            $('.mark-it-popup-icon-message-box').fadeIn(150);
+            var $box = $('.mark-it-popup-icon-message-box');
+            if (isRightOut(340)) {
+                $box.css('left', '-218px');
+            } else {
+                $box.css('left', '40px');
+            }
+            if (isBottomOut(241)) {
+                $box.css('top', '-211px');
+            } else {
+                $box.css('top', '31px');
+            }
+            $box.fadeIn(150);
+
         }
         function hideMessageBox() {
             $('.mark-it-popup-icon-message-box').fadeOut(150);
         }
 
         function showColorPanel() {
-            $('.mark-it-color-panel').slideDown(150);
+            var $colorPanel = $('.mark-it-color-panel');
+            if (isBottomOut()) {
+                $colorPanel.css('top', '-42px');
+            } else {
+                $colorPanel.css('top', '30px');
+            }
+            $colorPanel.fadeIn(150);
         }
 
         function hideColorPanel() {
-            $('.mark-it-color-panel').slideUp(150);
+            var $colorPanel = $('.mark-it-color-panel');
+            $colorPanel.fadeOut(150);
         }
 
         function setEleColor(el, color) {
@@ -482,7 +541,7 @@
             hideMessageBox();
             // 弹框输入框清空
             $('.mark-it-popup-icon-message-box-input > textarea').val('');
-            //
+            // 解决再次划入无法弹起问题
             mouseIsUped = true;
         }
 
@@ -542,8 +601,6 @@
 
         // 保存 或 更新
         function saveMarks(cb) {
-            var mark = $('.mark-it-popup-icon-message-box-input > textarea').val();
-            if (mark) currentSelection.mark = mark;
             currentSelection.uir = location.href;
             currentSelection.color = currentColor;
 
@@ -564,7 +621,7 @@
             isSaved = true;
 
             window.localStorage.setItem(storageKey, JSON.stringify(allSelections));
-            cb(null, mark)
+            cb(null)
         }
 
         function deleteMarkByid(id, cb) {
@@ -576,8 +633,26 @@
             cb(null);
         }
 
-        function showNotice(message) {
-            alert(message);
+        function showNotice(message, type) {
+            type = type || 'error';
+            var $notice = $('.mark-it-notice');
+
+            if (!$notice.length) {
+                $notice = $('<div class="mark-it-notice"></div>');
+                $notice.hide();
+                $('body').append($notice);
+            }
+            if (type === 'error') {
+                setEleColor($notice, 'red');
+            }
+            if (type === 'success') {
+                setEleColor($notice, 'green');
+            }
+            $notice.html(message);
+            $notice.slideDown(150);
+            setTimeout(function () {
+                $notice.slideUp(150);
+            }, 3000);
         }
 
 
