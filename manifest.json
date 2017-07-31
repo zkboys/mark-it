@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "Mark It",
+  "description": "网页选中文本高亮、添加标记",
+  "version": "1.0",
+  "browser_action": {
+    "default_title": "Mark It",
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*"
+      ],
+      "css": [
+        "./css/main.css"
+      ],
+      "js": [
+        "./js/rangy-core.js",
+        "./js/rangy-classapplier.js",
+        "./js/rangy-highlighter.js",
+        "./js/jquery.min.js",
+        "./js/main.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "notifications",
+    "storage"
+  ]
+}
