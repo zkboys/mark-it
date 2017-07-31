@@ -8,10 +8,19 @@
     "default_icon": "icon.png",
     "default_popup": "popup.html"
   },
+  "icons": {
+    "128": "icon.png",
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png"
+  },
   "content_scripts": [
     {
       "matches": [
-        "http://*/*"
+        "http://*/*",
+        "https://*/*",
+        "ftp://*/*",
+        "file://*/*"
       ],
       "css": [
         "./css/main.css"
@@ -24,13 +33,18 @@
         "./js/main.js"
       ],
       "all_frames": true,
-      "run_at": "document_idle"
+      "run_at": "document_end"
     }
   ],
   "permissions": [
+    "contextMenus",
     "tabs",
-    "activeTab",
-    "notifications",
-    "storage"
+    "cookies",
+    "http://*/",
+    "https://*/",
+    "storage",
+    "\u003Call_urls>",
+    "*://*.appchangelog.com/*",
+    "management"
   ]
 }

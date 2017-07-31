@@ -1,4 +1,3 @@
-
 .mark-it-highlight {
 }
 
@@ -22,6 +21,7 @@
 #mark-it-popup {
     display: inline-block;
     position: absolute;
+    z-index: 9999;
     border: 1px solid #ECECE7;
     border-radius: 3px;
     box-sizing: border-box;
@@ -131,7 +131,7 @@
     border: 1px solid #ECECE7;
     border-radius: 3px;
     margin-right: 5px;
-    margin-top: 5px;
+    margin-top: 7px;
     transition: border-width 150ms;
 }
 
@@ -154,7 +154,7 @@
     border-right: 1px solid #ECECE7;
     background: #fcfbf7;
     padding: 5px;
-    font: normal normal 12px/30px arial, sans-serif;
+    font: normal normal 12px arial, sans-serif;
 }
 
 .mark-it-popup-icon-message-box-input > textarea:focus {
