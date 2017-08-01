@@ -1,6 +1,7 @@
 (function () {
     window.onload = function () {
-        init();
+        // 延迟初始化，等到页面完全加载
+        setTimeout(init, 1000);
 
     };
     var currentColor = 'red';
